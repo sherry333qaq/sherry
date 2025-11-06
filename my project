@@ -1,0 +1,50 @@
+import streamlit as st
+from PIL import Image
+import random
+
+st.set_page_config(page_title="AI Outfit & Nail Style", layout="centered")
+st.title("💖 AI Outfit & Nail Style Recommendation 💖")
+
+# Upload photo
+uploaded_file = st.file_uploader("Upload your photo", type=["jpg","png"])
+if uploaded_file:
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Upload successful", use_column_width=True)
+
+    st.write("✨ Analyzing... ✨")
+
+    # Simulate AI analysis for skin tone, face shape, and makeup style
+    skin_tones = ["Fair", "Light yellow", "Tan", "Warm bronze"]
+    face_shapes = ["Oval", "Round", "Square", "Heart", "Long"]
+    makeup_styles = ["Japanese Fresh", "Korean Cute", "Western Glam", "Natural Worklook"]
+
+    user_skin = random.choice(skin_tones)
+    user_face = random.choice(face_shapes)
+    user_makeup = random.choice(makeup_styles)
+
+    st.subheader("💄 AI Analysis Results")
+    st.write(f"Skin tone: {user_skin}")
+    st.write(f"Face shape: {user_face}")
+    st.write(f"Makeup style: {user_makeup}")
+
+    # Outfit recommendation
+    tops = ["White Shirt", "Black Sweater", "Printed T-shirt", "Off-shoulder Top"]
+    bottoms = ["Jeans", "Pleated Skirt", "Tailored Pants", "Mini Skirt"]
+    shoes = ["White Sneakers", "Heels", "Loafers", "Ankle Boots"]
+
+    recommended_top = random.choice(tops)
+    recommended_bottom = random.choice(bottoms)
+    recommended_shoes = random.choice(shoes)
+
+    st.subheader("👗 Outfit Recommendation")
+    st.write(f"Top: {recommended_top}")
+    st.write(f"Bottom: {recommended_bottom}")
+    st.write(f"Shoes: {recommended_shoes}")
+
+    # Nail style recommendation
+    nail_colors = ["Pink Gradient", "French Elegance", "Nude Minimal", "Glitter Red"]
+    nail_style = random.choice(nail_colors)
+
+    st.subheader("💅 Nail Style Recommendation")
+    st.write(f"Style: {nail_style}")
+    st.image("https://i.imgur.com/your-nail-example.jpg", caption=nail_style, use_column_width=True)
