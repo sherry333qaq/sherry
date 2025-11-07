@@ -100,5 +100,3 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-else:
-    st.markdown('<p style="text-align:center;">Upload your photo above to start your ultimate AI fashion try-on 💫</p >', unsafe_allow_html=True)
