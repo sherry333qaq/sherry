@@ -1,67 +1,95 @@
 import streamlit as st
 from PIL import Image
 
-st.set_page_config(page_title="Sherry's AI Style Advisor", layout="wide")
-st.title("Sherry's AI Style Advisor")
+st.set_page_config(page_title="Sherry's Y2K Style Advisor", layout="wide")
+
+# --- Y2K Background ---
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-image: url("https://i.ibb.co/Y2K-Background.jpg");
+        background-size: cover;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.title("Sherry's Y2K Style Advisor")
 st.markdown("By Sherry | Business: tuxr2021@163.com")
 
 # --- Step 1: User Information ---
 st.sidebar.header("Step 1: Your Info")
-face_shape = st.sidebar.selectbox("Face Shape", ["Oval", "Round", "Square", "Heart"])
-skin_tone = st.sidebar.selectbox("Skin Tone", ["Cool", "Warm", "Neutral"])
-hair_color = st.sidebar.selectbox("Hair Color", ["Black", "Brown", "Blonde", "Other"])
-favorite_colors = st.sidebar.multiselect("Favorite Colors", ["Red","Blue","White","Black","Pink","Green"])
-preferred_style = st.sidebar.multiselect("Preferred Styles", ["Asian","White Girl","HOODY","Elegant","Casual"])
-occasion = st.sidebar.selectbox("Occasion", ["Class","Casual Outing","Date","Party"])
+face_shape = st.sidebar.selectbox("Face Shape", ["Oval","Round","Square","Heart","Diamond","Triangle","Long","Wide"])
+skin_tone = st.sidebar.selectbox("Skin Tone", ["Cool","Warm","Neutral","Olive","Pale","Tan","Dark"])
+hair_color = st.sidebar.selectbox("Hair Color", ["Black","Dark Brown","Light Brown","Blonde","Red","Pink","Blue","Silver","Ombre"])
+eyebrow_type = st.sidebar.selectbox("Eyebrow Type", ["Straight","Arched","Thick","Thin","Natural","Angled"])
+eyelash_preference = st.sidebar.selectbox("Eyelash Preference", ["None","Natural","Extensions","Volume","Curl"])
+favorite_colors = st.sidebar.multiselect("Favorite Colors", ["Red","Blue","White","Black","Pink","Green","Purple","Yellow","Orange","Silver","Gold","Neon"])
+preferred_style = st.sidebar.multiselect("Preferred Styles", ["Y2K","Asian","White Girl","HOODIE","Elegant","Casual","Streetwear","K-Pop","Indie","Girly","Grunge","Minimalist","Cute","Soft","Bold"])
+occasion = st.sidebar.selectbox("Occasion", ["Class","Casual Outing","Date","Party","Work","Travel","Clubbing","Festival","Photoshoot"])
+budget = st.sidebar.number_input("Your Budget ($)", min_value=50, max_value=10000, step=50, value=200)
 
-# --- Step 2: Upload Your Photo ---
+# --- Step 2: Upload Photo ---
 st.header("Step 2: Upload Your Photo")
 user_file = st.file_uploader("Upload your photo", type=["jpg","png"])
 if user_file:
     user_image = Image.open(user_file).convert("RGBA")
     st.image(user_image, caption="Your photo", use_column_width=True)
 
-# --- Step 3: Outfit Selection ---
-st.header("Step 3: Outfit Selection")
-outfits = [
-    "White Pleated Dress", "Red Pleated Dress", "Trench Coat", "Long Robe",
-    "Avocado Tower Style", "Hanfu"
-]
-selected_outfit = st.selectbox("Select Outfit", outfits)
-st.write(f"Recommended Outfit: **{selected_outfit}** based on your preferences.")
+# --- Step 3: Generate Recommendations ---
+st.header("Step 3: Generate Your Y2K Recommendations")
+if st.button("Generate My Style"):
+    # --- Outfits ---
+    outfits = [
+        {"name":"White Pleated Dress", "price":150},
+        {"name":"Red Mini Skirt", "price":120},
+        {"name":"Baggy Denim Pants", "price":100},
+        {"name":"Crop Top Hoodie", "price":80},
+        {"name":"Platform Shoes Outfit", "price":200},
+        {"name":"Hanfu", "price":300}
+    ]
+    filtered_outfits = [o["name"] for o in outfits if o["price"] <= budget]
+    selected_outfit = filtered_outfits[0] if filtered_outfits else "No suitable outfit in budget"
 
-# --- Step 4: Shoes Selection ---
-st.header("Step 4: Shoes Selection")
-shoes = ["Martens Boots","Heels","HOODY Flat Shoes","Sneakers","Sandals"]
-selected_shoes = st.selectbox("Select Shoes", shoes)
-st.write(f"Recommended Shoes: **{selected_shoes}**")
+    # --- Shoes ---
+    shoes = [
+        {"name":"Platform Sneakers", "price":120},
+        {"name":"Chunky Boots", "price":200},
+        {"name":"High Heels", "price":250},
+        {"name":"HOODIE Flats", "price":100},
+        {"name":"Sandals", "price":90}
+    ]
+    filtered_shoes = [s["name"] for s in shoes if s["price"] <= budget]
+    selected_shoes = filtered_shoes[0] if filtered_shoes else "No suitable shoes in budget"
 
-# --- Step 5: Nail Selection ---
-st.header("Step 5: Nail Selection")
-nails = ["Cat Eye","French","Artistic","Plain","Extension","Non-Extension"]
-selected_nail = st.selectbox("Select Nail Style", nails)
-st.write(f"Recommended Nail Style: **{selected_nail}**")
+    # --- Nails ---
+    nails = ["Cat Eye","French Tip","Glitter","3D Decals","Ombre","Matte","Short","Long","Extensions"]
+    selected_nail = nails[0]
 
-# --- Step 6: Accessories ---
-st.header("Step 6: Accessories")
-accessories = ["Sunglasses","Hat","Minimal Jewelry","Bag","Scarf"]
-selected_accessory = st.selectbox("Select Accessory", accessories)
-st.write(f"Recommended Accessory: **{selected_accessory}**")
+    # --- Accessories ---
+    accessories = ["Mini Backpack","Tiny Sunglasses","Choker","Bucket Hat","Earrings","Bracelets","Rings"]
+    selected_accessory = accessories[0]
 
-# --- Step 7: Hair & Makeup Analysis ---
-st.header("Step 7: Hair & Makeup Advice")
-st.subheader("Hair Analysis")
-st.write("Based on your hair color and skin tone, your hair color looks good!" if hair_color in ["Black","Brown"] else "Consider adjusting your hair color for the best match.")
-st.subheader("Eyebrow Recommendation")
-st.write("A natural medium-thick eyebrow suits your face." if face_shape in ["Oval","Heart"] else "Consider slightly thicker eyebrows for balance.")
-st.subheader("Eyelash Recommendation")
-st.write("You can try eyelash extensions for a more striking look!" if "Elegant" in preferred_style else "Natural lashes are fine.")
+    # --- Hair / Eyebrow / Eyelash Advice ---
+    hair_advice = "Your hair color looks trendy for Y2K style!" if hair_color in ["Blonde","Brown","Light Brown"] else "Consider soft highlights for Y2K effect."
+    eyebrow_advice = "Thin arched brows suit Y2K style."
+    eyelash_advice = "Optional eyelash extensions enhance Y2K vibe."
 
-# --- Step 8: Style & Occasion Summary ---
-st.header("Step 8: Style Summary")
-st.write(f"Your preferred styles: {', '.join(preferred_style) if preferred_style else 'No preference'}")
-st.write(f"Your favorite colors: {', '.join(favorite_colors) if favorite_colors else 'No preference'}")
-st.write(f"Recommended outfit for {occasion}: **{selected_outfit}** with **{selected_shoes}** and **{selected_accessory}**, nail style: **{selected_nail}**.")
+    # --- Style Summary ---
+    st.subheader("Y2K Style Summary")
+    st.write(f"Recommended Outfit: **{selected_outfit}**")
+    st.write(f"Recommended Shoes: **{selected_shoes}**")
+    st.write(f"Recommended Nail Style: **{selected_nail}**")
+    st.write(f"Recommended Accessory: **{selected_accessory}**")
+    st.write(f"Hair Advice: {hair_advice}")
+    st.write(f"Eyebrow Advice: {eyebrow_advice}")
+    st.write(f"Eyelash Advice: {eyelash_advice}")
+    st.write(f"Your preferred colors: {', '.join(favorite_colors) if favorite_colors else 'No preference'}")
+    st.write(f"Selected Occasion: {occasion}")
+    st.write(f"Your Budget: ${budget}")
 
+# --- Step 4: Footer ---
 st.markdown("---")
-st.markdown("📌 Note: All images shown are placeholders. Replace them with actual PNG links from your GitHub to visualize outfit, nail, and accessory images.")
+st.markdown("<p style='text-align:center;'>I just graduated, so this project is not perfect. Please be kind and enjoy my work!</p >", unsafe_allow_html=True)
