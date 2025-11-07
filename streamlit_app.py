@@ -1,102 +1,67 @@
 import streamlit as st
 from PIL import Image
-import requests
-from io import BytesIO
 
-# --- Page Config ---
-st.set_page_config(page_title="AI Y2K Stylist Ultimate Try-On", page_icon="💅", layout="wide")
+st.set_page_config(page_title="Sherry's AI Style Advisor", layout="wide")
+st.title("Sherry's AI Style Advisor")
+st.markdown("By Sherry | Business: tuxr2021@163.com")
 
-# --- CSS ---
-st.markdown("""
-<style>
-body {background: radial-gradient(circle at 10% 20%, #1b003a, #3d0070, #ff00cc); color:#fff; font-family:'Poppins',sans-serif;}
-h1,h2,h3 {text-align:center; color:#ffb6ff; text-shadow:0 0 15px #ff00ff;}
-.container {display: flex; flex-wrap: wrap; justify-content: center;}
-.clickable-img {margin: 10px; border-radius: 10px; cursor: pointer; width:150px;}
-.footer {text-align:center; color:#ffb6ff; margin-top:50px;}
-</style>
-""", unsafe_allow_html=True)
+# --- Step 1: User Information ---
+st.sidebar.header("Step 1: Your Info")
+face_shape = st.sidebar.selectbox("Face Shape", ["Oval", "Round", "Square", "Heart"])
+skin_tone = st.sidebar.selectbox("Skin Tone", ["Cool", "Warm", "Neutral"])
+hair_color = st.sidebar.selectbox("Hair Color", ["Black", "Brown", "Blonde", "Other"])
+favorite_colors = st.sidebar.multiselect("Favorite Colors", ["Red","Blue","White","Black","Pink","Green"])
+preferred_style = st.sidebar.multiselect("Preferred Styles", ["Asian","White Girl","HOODY","Elegant","Casual"])
+occasion = st.sidebar.selectbox("Occasion", ["Class","Casual Outing","Date","Party"])
 
-st.markdown("<h1>💅 AI Y2K Stylist Ultimate Try-On 💄</h1>", unsafe_allow_html=True)
+# --- Step 2: Upload Your Photo ---
+st.header("Step 2: Upload Your Photo")
+user_file = st.file_uploader("Upload your photo", type=["jpg","png"])
+if user_file:
+    user_image = Image.open(user_file).convert("RGBA")
+    st.image(user_image, caption="Your photo", use_column_width=True)
 
-# --- Upload Photo ---
-uploaded_file = st.file_uploader("Upload your half-body photo:", type=["jpg","jpeg","png"])
-if uploaded_file:
-    user_img = Image.open(uploaded_file).convert("RGBA")
-    st.image(user_img, caption="Your Photo", use_column_width=False)
+# --- Step 3: Outfit Selection ---
+st.header("Step 3: Outfit Selection")
+outfits = [
+    "White Pleated Dress", "Red Pleated Dress", "Trench Coat", "Long Robe",
+    "Avocado Tower Style", "Hanfu"
+]
+selected_outfit = st.selectbox("Select Outfit", outfits)
+st.write(f"Recommended Outfit: **{selected_outfit}** based on your preferences.")
 
-    # --- Preferences ---
-    st.subheader("Style Preferences")
-    style = st.selectbox("Fashion Style:", ["Y2K","Streetwear","Cute","Minimalist","Glam"])
-    color_pref = st.selectbox("Favorite Color:", ["Pink","Blue","Black","White","Purple","Neon Green"])
-    budget = st.slider("Budget ($):", 50, 500, 150, step=10)
+# --- Step 4: Shoes Selection ---
+st.header("Step 4: Shoes Selection")
+shoes = ["Martens Boots","Heels","HOODY Flat Shoes","Sneakers","Sandals"]
+selected_shoes = st.selectbox("Select Shoes", shoes)
+st.write(f"Recommended Shoes: **{selected_shoes}**")
 
-    # --- Mock Assets (replace with your PNGs) ---
-    outfit_urls = ["https://i.ibb.co/2n7Y0kg/y2k1.png",
-                   "https://i.ibb.co/WsvK5jZ/y2k2.png",
-                   "https://i.ibb.co/fv4QH1x/y2k3.png"]
-    nail_urls = ["https://i.ibb.co/2KxFz5n/nail1.png",
-                 "https://i.ibb.co/7NvJ2xF/nail2.png",
-                 "https://i.ibb.co/5W1D7qK/nail3.png"]
-    accessory_urls = ["https://i.ibb.co/2n7Y0kg/bag1.png",
-                      "https://i.ibb.co/WsvK5jZ/shoes1.png",
-                      "https://i.ibb.co/fv4QH1x/necklace1.png"]
+# --- Step 5: Nail Selection ---
+st.header("Step 5: Nail Selection")
+nails = ["Cat Eye","French","Artistic","Plain","Extension","Non-Extension"]
+selected_nail = st.selectbox("Select Nail Style", nails)
+st.write(f"Recommended Nail Style: **{selected_nail}**")
 
-    def load_image(url):
-        response = requests.get(url)
-        return Image.open(BytesIO(response.content)).convert("RGBA")
+# --- Step 6: Accessories ---
+st.header("Step 6: Accessories")
+accessories = ["Sunglasses","Hat","Minimal Jewelry","Bag","Scarf"]
+selected_accessory = st.selectbox("Select Accessory", accessories)
+st.write(f"Recommended Accessory: **{selected_accessory}**")
 
-    # --- Display clickable outfits ---
-    st.subheader("Select Outfit")
-    outfit_choice = None
-    cols = st.columns(len(outfit_urls))
-    for i, url in enumerate(outfit_urls):
-        with cols[i]:
-            img = load_image(url)
-            if st.button("", key=f"outfit_{i}"):
-                outfit_choice = img
-            st.image(img, use_column_width=True)
+# --- Step 7: Hair & Makeup Analysis ---
+st.header("Step 7: Hair & Makeup Advice")
+st.subheader("Hair Analysis")
+st.write("Based on your hair color and skin tone, your hair color looks good!" if hair_color in ["Black","Brown"] else "Consider adjusting your hair color for the best match.")
+st.subheader("Eyebrow Recommendation")
+st.write("A natural medium-thick eyebrow suits your face." if face_shape in ["Oval","Heart"] else "Consider slightly thicker eyebrows for balance.")
+st.subheader("Eyelash Recommendation")
+st.write("You can try eyelash extensions for a more striking look!" if "Elegant" in preferred_style else "Natural lashes are fine.")
 
-    st.subheader("Select Nail Style")
-    nail_choice = None
-    cols = st.columns(len(nail_urls))
-    for i, url in enumerate(nail_urls):
-        with cols[i]:
-            img = load_image(url)
-            if st.button("", key=f"nail_{i}"):
-                nail_choice = img
-            st.image(img, use_column_width=True)
+# --- Step 8: Style & Occasion Summary ---
+st.header("Step 8: Style Summary")
+st.write(f"Your preferred styles: {', '.join(preferred_style) if preferred_style else 'No preference'}")
+st.write(f"Your favorite colors: {', '.join(favorite_colors) if favorite_colors else 'No preference'}")
+st.write(f"Recommended outfit for {occasion}: **{selected_outfit}** with **{selected_shoes}** and **{selected_accessory}**, nail style: **{selected_nail}**.")
 
-    st.subheader("Select Accessory")
-    accessory_choice = None
-    cols = st.columns(len(accessory_urls))
-    for i, url in enumerate(accessory_urls):
-        with cols[i]:
-            img = load_image(url)
-            if st.button("", key=f"acc_{i}"):
-                accessory_choice = img
-            st.image(img, use_column_width=True)
-
-    # --- Compose final image ---
-    if outfit_choice or nail_choice or accessory_choice:
-        combined = user_img.copy()
-        if outfit_choice: combined.paste(outfit_choice, (0,0), outfit_choice)
-        if nail_choice: combined.paste(nail_choice, (0,0), nail_choice)
-        if accessory_choice: combined.paste(accessory_choice, (0,0), accessory_choice)
-        st.subheader("👗 Your Try-On Preview")
-        st.image(combined, use_column_width=True)
-        st.download_button(
-            label="💾 Download Your Try-On Image",
-            data=combined.tobytes(),
-            file_name="my_tryon.png",
-            mime="image/png"
-        )
-
-# --- Footer with signature ---
-st.markdown("""
-<div class="footer">
-<hr>
-<p>Sherry | Business Cooperation: tuxr2021@163.com | Support Originality</p >
-</div>
-""", unsafe_allow_html=True)
-
+st.markdown("---")
+st.markdown("📌 Note: All images shown are placeholders. Replace them with actual PNG links from your GitHub to visualize outfit, nail, and accessory images.")
