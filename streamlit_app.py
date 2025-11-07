@@ -6,7 +6,7 @@ st.set_page_config(page_title="AI Outfit & Nail Style", layout="centered")
 st.title("💖 AI Outfit & Nail Style Recommendation 💖")
 
 # Upload photo
-uploaded_file = st.file_uploader("Upload your photo", type=["jpg","png"])
+uploaded_file = st.file_uploader("Upload your photo", type=["jpg","png","jpeg"])
 if uploaded_file:
     image = Image.open(uploaded_file)
     st.image(image, caption="Upload successful", use_column_width=True)
